@@ -18,7 +18,7 @@ public:
 
 	// Motor enkoderı darbeleri (pulses)
 	static volatile Pair<uint64_t> pulses;
-
+	
 private:
 	unsigned long last_calc; // Son hesaplama zamanı (millis)
 

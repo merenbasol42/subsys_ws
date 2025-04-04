@@ -1,4 +1,5 @@
 #include <References/Pin.h>
+#include <Logger.h>
 #include "Motor.h"
 
 Motor::Motor():
@@ -32,6 +33,7 @@ void Motor::set_dir(Pair<bool> new_dirs) {
 }
 
 void Motor::set_pwm(Pair<int16_t> new_pwms) {
+    Logger::log("pwm_l = " + String(new_pwms.left) + " - pwm_r = " + String(new_pwms.right));
     Pair<int8_t> sign = {
         this->cnvrt_sign(new_pwms.left),
         this->cnvrt_sign(new_pwms.right)
@@ -45,7 +47,7 @@ void Motor::set_pwm(Pair<int16_t> new_pwms) {
     set_dir(new_dir);
 
     analogWrite(this->ENA_PINS.left, new_pwms.left * sign.left);
-    analogWrite(this->ENA_PINS.left, new_pwms.right * sign.right);
+    analogWrite(this->ENA_PINS.right, new_pwms.right * sign.right);
 }
 
 Pair<bool> Motor::get_dir() {

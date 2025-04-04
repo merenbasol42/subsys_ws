@@ -25,8 +25,16 @@ void MotorController::spin_some() {
 	
 	EncoderStats stats = encoder.calc_stats();
 	Pair<int16_t> pwms = {
-		(uint8_t)pid.left.get_cmd(stats.vel.left),
-		(uint8_t)pid.right.get_cmd(stats.vel.right)
+        constrain(
+            (int16_t)pid.left.get_cmd(stats.vel.left),
+            -255,
+            255
+        ),
+        constrain(
+            (int16_t)pid.right.get_cmd(stats.vel.right),
+            -255,
+            255
+        )
 	};
 	
 	this->motor.set_pwm(pwms);
@@ -37,10 +45,6 @@ void MotorController::set_wh_speeds(Pair<float> wh_speeds) {
     this->pid.left.set_goal(wh_speeds.left);
     this->pid.right.set_goal(wh_speeds.right);
     // motorlara PWM yazmıyoruz zaten spin some'da bizim yerimize yapcak
-}
-
-void MotorController::set_enc_stats_publisher(void (*publisher)(EncoderStats)) {
-	enc_stats_pub_f = publisher;
 }
 
 bool MotorController::spin_control() {
