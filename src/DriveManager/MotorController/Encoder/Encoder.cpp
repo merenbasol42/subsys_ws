@@ -7,8 +7,8 @@
 #include "./References.h"
 
 // Statik üyelerin tanımlamaları
-const Pair<uint8_t> Encoder::A_PIN = {PIN_ENCODER_L_A, PIN_ENCODER_R_A};	// Örneğin sol için 2, sağ için 18
-const Pair<uint8_t> Encoder::B_PIN = {PIN_ENCODER_L_B, PIN_ENCODER_R_B};	// Örneğin sol için 3, sağ için 19
+const Pair<uint8_t> Encoder::CLK_PIN = {PIN_ENCODER_L_CLK, PIN_ENCODER_R_CLK};
+const Pair<uint8_t> Encoder::DT_PIN = {PIN_ENCODER_L_DT, PIN_ENCODER_R_DT};	
 volatile Pair<uint64_t> Encoder::pulses = {0, 0};
 
 Encoder::Encoder():
@@ -17,34 +17,40 @@ Encoder::Encoder():
 	DAP_FACT({ RES.left * 2 * PI, RES.right * 2 * PI }),	// Her teker için tur mesafesi
 	last_calc(millis()) 
 {
-	pinMode(A_PIN.left, INPUT);   pinMode(A_PIN.right, INPUT);
-	pinMode(B_PIN.left, INPUT);   pinMode(B_PIN.right, INPUT);
+	pinMode(CLK_PIN.left, INPUT);   pinMode(CLK_PIN.right, INPUT);
+	pinMode(DT_PIN.left, INPUT);   pinMode(DT_PIN.right, INPUT);
 
 	attachInterrupt(
-		digitalPinToInterrupt(A_PIN.left),
-		pulse_A_cb_L,
+		digitalPinToInterrupt(CLK_PIN.left),
+		pulse_cb_L,
 		CHANGE
 	);
 
 	attachInterrupt(
-		digitalPinToInterrupt(A_PIN.right),
-		pulse_A_cb_R,
+		digitalPinToInterrupt(CLK_PIN.right),
+		pulse_cb_R,
 		CHANGE
 	);
 }
 
-void Encoder::pulse_A_cb_L() {
-	// Sol enkoder için A pininde kesme tetiklendiğinde B pininin durumu kontrol edilir.
-	if(digitalRead(B_PIN.left) == HIGH) {
+void Encoder::pulse_cb_L() {
+	// CLK pininde kesme tetiklendiğinde DT pininin durumu kontrol edilir.
+	int clk_st = digitalRead(CLK_PIN.left);
+	int dt_st  = digitalRead(DT_PIN.left);
+	
+	if(dt_st != clk_st) {
 		pulses.left++;
 	} else {
 		pulses.left--;
 	}
 }
 
-void Encoder::pulse_A_cb_R() {
-	// Sağ enkoder için A pininde kesme tetiklendiğinde B pininin durumu kontrol edilir.
-	if(digitalRead(B_PIN.right) == HIGH) {
+void Encoder::pulse_cb_R() {
+	// CLK pininde kesme tetiklendiğinde DT pininin durumu kontrol edilir.
+	int clk_st = digitalRead(CLK_PIN.right);
+	int dt_st  = digitalRead(DT_PIN.right);
+
+	if(dt_st != clk_st) {
 		pulses.right++;
 	} else {
 		pulses.right--;

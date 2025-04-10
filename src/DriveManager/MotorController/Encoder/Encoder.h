@@ -8,10 +8,10 @@
 class Encoder {
 public:
 	// Statik pin tanımlamaları; bu değerleri ihtiyacınıza göre ayarlayabilirsiniz.
-	static const Pair<uint8_t> A_PIN;
-	static const Pair<uint8_t> B_PIN;
+	static const Pair<uint8_t> CLK_PIN; // signal
+	static const Pair<uint8_t> DT_PIN; // yön
 	
-	// Sabit özellikler: Rezolüsyon ve yarıçap değerleri, örnek olarak atanmıştır.
+	// Sabit özellikler: Rezolüsyon ve yarıçap değerleri.
 	const Pair<uint8_t> RES;
 	const Pair<float> RADIUS;
 	const Pair<float> DAP_FACT;  // Her teker için bir turda gidilen mesafe
@@ -26,8 +26,8 @@ public:
 	Encoder();
 
 	// ISR callback fonksiyonları
-	static void pulse_A_cb_L();
-	static void pulse_A_cb_R();
+	static void pulse_cb_L();
+	static void pulse_cb_R();
 
 	// İstatistik hesaplama fonksiyonu
 	EncoderStats calc_stats();

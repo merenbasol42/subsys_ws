@@ -10,9 +10,9 @@
 #define PIN_MOTOR_L_ENA 13
 #define PIN_MOTOR_R_ENA 14
 
-#define PIN_ENCODER_L_A 23
-#define PIN_ENCODER_R_A 25
-#define PIN_ENCODER_L_B 26
-#define PIN_ENCODER_R_B 27
+#define PIN_ENCODER_L_CLK 23
+#define PIN_ENCODER_R_CLK 25
+#define PIN_ENCODER_L_DT 26
+#define PIN_ENCODER_R_DT 27
 
 #endif
